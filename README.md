@@ -1,8 +1,4 @@
-# ocean-subspecies-paper
-
-This repository contains the code associated with the manuscript "Genomically cohesive subspecies as eco-evolutionary units in the global ocean microbiome" by Paoli, Priest et al.
-
-Link to manuscript to come.
+This repository contains the code and information to reproduce the analysis presented in the manuscript "Genomically discrete and ecologically cohesive subspecies as biologically meaningful units in the global ocean microbiome" by Paoli & Priest et al.
 
 ## Structure
 
