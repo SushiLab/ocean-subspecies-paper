@@ -14,5 +14,6 @@ To facilitate usability and reproducibility, we have provided detailed descripti
 ├── pipeline/ --> snakemake pipeline and rules used to conduct the primary analyses of the paper
 ├── scripts/ --> collection of scripts to process the pipeline output, perform downstream analysis and generate figures and supplementary data
 ├── tables/ --> scripts to generate the suppl. tables
+├── downstream_analysis_and_figures/ --> scripts for reproducing the downstream analysis on subspecies, their mechanisms of diversification and environmental drivers
 ```
 
