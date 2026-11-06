@@ -10,6 +10,8 @@ motus_profile = read_tsv("https://sunagawalab.ethz.ch/share/microbiomics/ocean/s
 
 subspecies = googlesheets4::read_sheet(ss = "1fXzHlT3NDnBKruxyM_VWqkMzMeXD3PCs2RAN5dV61pc", sheet = "species_with_subspecies")
 
+subspecies_pipeline = googlesheets4::read_sheet(ss = "1fXzHlT3NDnBKruxyM_VWqkMzMeXD3PCs2RAN5dV61pc", sheet = "species_for_pop")
+
 motus_map = googlesheets4::read_sheet(ss = "1fXzHlT3NDnBKruxyM_VWqkMzMeXD3PCs2RAN5dV61pc", sheet = "species_for_coverage")
 
 samples = googlesheets4::read_sheet(ss = "1Npt0J8dbFCfUi3Lugw1KQIYTv4G3uRih3Gdx-pibxIw", sheet = "Samples")
@@ -18,7 +20,7 @@ samples = googlesheets4::read_sheet(ss = "1Npt0J8dbFCfUi3Lugw1KQIYTv4G3uRih3Gdx-
 
 # Identify the relevant motus
 popgen_motus = subspecies %>% 
-  left_join(motus_map) %>% View()
+  left_join(motus_map) %>%
   separate_rows(motu_match, sep = ";") %>%
   filter(!is.na(motu_match)) %>%
   pull(`motu_match`) %>% unique()
@@ -59,3 +61,22 @@ motus_profile_popgen %>%
 
 ggsave("~/polybox/PhD/Exploratorium/popgen/publication/suppl_figures/popgen-ecol-relevance.pdf", width = 175, height = 30, units = 'mm')
 ggsave("~/polybox/PhD/Exploratorium/popgen/publication/suppl_figures/popgen-ecol-relevance.png", width = 175, height = 30, units = 'mm')
+
+
+# Add the plot with number of (phaseable) samples for sp w and w/o subspecies
+
+subspecies_pipeline = subspecies_pipeline %>%
+  mutate(subspecies = ifelse(Species %in% subspecies$Species, "Yes", "No"))
+
+wilcox.test(subspecies_pipeline %>% filter(subspecies == "Yes") %>% pull(n_samples_with_SNV_coverage),
+            subspecies_pipeline %>% filter(subspecies == "No") %>% pull(n_samples_with_SNV_coverage))
+
+subspecies_pipeline %>%
+  ggplot() +
+  geom_boxplot(aes(x = n_samples_with_SNV_coverage, y = subspecies), outlier.shape = NA) +
+  scale_x_log10() +
+  ylab("Species with\ndetected subspecies") +
+  xlab("Number of samples used for subspecies discovery") +
+  theme_minimal()
+
+ggsave("~/polybox/PhD/Exploratorium/popgen/publication/suppl_figures/popgen-n_samples-subspecies.pdf", width = 175, height = 50, units = 'mm')
